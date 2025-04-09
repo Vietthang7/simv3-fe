@@ -56,14 +56,37 @@
     <div
       v-if="showModalTel"
       @click.self="handleModalTel"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70]"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70] transition-opacity duration-500 opacity-0"
+      :class="{ 'opacity-100': showModalTel }"
       >
-
+      <div class="bg-white rounded-lg p-6 w-96 transform transition-all duration-300 ease-out"
+        :class="{ 'translate-y-4 opacity-0': showModalTel, 'translate-y-0 opacity-100': !showModalTel }">
+      >
+        <div class="w-full flex justify-end">
+          <CloseBlack @click="handleModalTel" class="cursor-pointer" />
+        </div>
+        <h3 class="text-lg font-semibold text-title text-center mb-4">
+          Kết nối với chúng tôi qua điện thoại
+        </h3>
+        <div class="flex flex-col space-y-4">
+          <a href="tel:0394143687">
+            <button class="bg-primary text-white py-2 px-4 rounded w-full">
+              <div class="flex flex-col items-center align-center min-w-[60px]">
+                Hà Nội
+              </div>
+            </button>
+          </a>
+          <a href="tel:0394143687">
+            <button class="bg-primary text-white py-2 px-4 rounded w-full">
+              <div class="flex flex-col items-center align-center min-w-[60px]">
+                Hồ Chí Minh
+              </div>
+            </button>
+          </a>
+        </div>
+      </div>
     </div>
-
-
-
-
+    <Footer :categories="categories" />
   </div>
 </template>
 
