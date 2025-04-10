@@ -5,45 +5,52 @@ const API_ENDPOINTS = {
     customer: "/customer",
   },
   admin: {
-    tags: "admin/tags",
-    faqs: "admin/faqs",
-  }
+    tags: "/admin/tags",
+    faqs: "/admin/faqs",
+  },
 };
+
 class Request {
   constructor() {
-    this.baseURL = useRuntimeConfig().public.BaseUrl;
+    this.baseURL = useRuntimeConfig().public.baseUrl;
     this.headers = {};
   }
+
   fetch(url, method, options) {
     this.headers = {
       "Content-type": "application/json",
     };
+
     return useFetch(url, {
+      baseURL: this.baseURL,
       method: method,
       headers: this.headers,
       ...options,
     });
   }
-  get(url, options = {}) {
+
+  get(url, options) {
     return this.fetch(url, "GET", options);
   }
-  post(url, options = {}) {
+  post(url, options) {
     return this.fetch(url, "POST", options);
   }
-  put(url, options = {}) {
+  put(url, options) {
     return this.fetch(url, "PUT", options);
   }
-  delete(url, options = {}) {
-    return this.fetch(url, "DELETE", options);
-  }
-  patch(url, options = {}) {
+  patch(url, options) {
     return this.fetch(url, "PATCH", options);
   }
+  delete(url, options) {
+    return this.fetch(url, "DELETE", options);
+  }
 }
+
 class CMSManager {
   constructor(request) {
     this.request = request;
   }
+
   async getBlogs(data) {
     return this.request.get(`${API_ENDPOINTS.stores.blogs}/blogs`, data);
   }
@@ -53,24 +60,30 @@ class CMSManager {
   async getBlogCategories(data) {
     return this.request.get(`${API_ENDPOINTS.stores.blogs}/categories`, data);
   }
+
   async getBlogCategoryBySlug(slug) {
     return this.request.get(`${API_ENDPOINTS.stores.blogs}/categories/${slug}`);
   }
+
   async getBlogTagsStores(slug, data) {
     return this.request.get(`${API_ENDPOINTS.stores.blogs}/tags/${slug}`, data);
   }
+
   async getBlogTags(data) {
     return this.request.get(`${API_ENDPOINTS.admin.tags}`, data);
   }
+
   async getFAQ(data) {
     return this.request.get(`${API_ENDPOINTS.admin.faqs}`, data);
   }
+
   async getListProductCategory(data) {
     return this.request.get(
       `${API_ENDPOINTS.stores.stores}/list_product_category`,
       data
     );
   }
+
   async getStoreProduct(data) {
     return this.request.get(`${API_ENDPOINTS.stores.stores}/products`, data);
   }
@@ -89,6 +102,7 @@ class CMSManager {
       data
     );
   }
+
   async getCustomer(cart_id) {
     return this.request.get(`${API_ENDPOINTS.stores.customer}/cart/${cart_id}`);
   }
@@ -111,11 +125,13 @@ class CMSManager {
       data
     );
   }
+
   async deleteCustomer(cart_id) {
     return this.request.delete(
       `${API_ENDPOINTS.stores.customer}/cart/${cart_id}`
     );
   }
+
   async createCustomer(data) {
     return this.request.post(`${API_ENDPOINTS.stores.customer}/cart`, data);
   }
@@ -139,6 +155,7 @@ class CMSManager {
       data
     );
   }
+
   async getSearch(data) {
     return this.request.get(`${API_ENDPOINTS.stores.stores}/nations`, data);
   }
@@ -165,6 +182,7 @@ class CMSManager {
     );
   }
 }
+
 class RestAPI {
   constructor() {
     this.request = new Request();
@@ -172,4 +190,5 @@ class RestAPI {
     this.admin = new CMSManager(this.request);
   }
 }
+
 export default () => ({ restAPI: new RestAPI() });

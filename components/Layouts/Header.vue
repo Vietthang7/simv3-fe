@@ -1,5 +1,7 @@
 <script setup>
+const route = useRoute();
 const { restAPI } = useApi();
+console.log("restAPI", restAPI)
 </script>
 
 <template>
