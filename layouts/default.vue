@@ -1,6 +1,10 @@
 <template>
   <div class="flex flex-col min-h-screen">
-    <Header :categories="categories" :class="{ 'hidden-header': isHeaderHidden }" class="fixed-header" />
+    <Header
+      :categories="categories"
+      :class="{ 'hidden-header': isHeaderHidden }"
+      class="fixed-header"
+    />
     <div class="content bg-white min-h-[calc(100vh-677px)]">
       <slot />
     </div>

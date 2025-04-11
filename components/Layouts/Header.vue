@@ -13,7 +13,8 @@ let searchTimeout = null;
 const searchInput = ref(null);
 
 const route = useRoute();
-
+const showDrawer = ref(false);
+const showCart = ref(false);
 const callApiSearch = async () => {
   // Gọi API để lấy dữ liệu
   if (resultSearch.value.length === 0) {
@@ -28,7 +29,11 @@ const handleSearch = () => {
   }
 
 }
-const toggleMenu = () => {}
+const toggleMenu = () => {
+  callApiSearch();
+  showDrawer.value = !showDrawer.value;
+  showCart.value = false;
+ }
 </script>
 
 <template>
@@ -42,6 +47,12 @@ const toggleMenu = () => {}
           <p class="text-white text-base font-light" v-else>
             Sim247 - Sim du lịch quốc tế
           </p>
+        </div>
+        <div class="flex w-full items-center justify-between bg-white py-5 width-base lg:py-4 space-x-0">
+          <div @click="toggleMenu" v-if="!showDrawer && !showCart" class="lg:hidden w-6 h-6 mr-[5.5px]">
+            <MenuMobile />
+          </div>
+          
         </div>
       </div>
     </div>
