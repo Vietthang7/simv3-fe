@@ -15,6 +15,9 @@ const searchInput = ref(null);
 const route = useRoute();
 const showDrawer = ref(false);
 const showCart = ref(false);
+const showCartCount = ref(true);
+
+
 const callApiSearch = async () => {
   // Gọi API để lấy dữ liệu
   if (resultSearch.value.length === 0) {
@@ -33,7 +36,31 @@ const toggleMenu = () => {
   callApiSearch();
   showDrawer.value = !showDrawer.value;
   showCart.value = false;
- }
+}
+// Lấy dữ liệu giỏ hàng
+const dataCart = ref(null);
+const cart = ref([]);
+// Hàm load giỏ hàng
+const loadCart = async () => {
+  const cart_id = localStorage.getItem("cart_id");
+  if (cart_id) {
+    const { data: resDataCart } = await restAPI.stores.getCustomer(cart_id);
+    if (!resDataCart.value.error) {
+      dataCart.value = resDataCart.value?.data;
+      cart.value = resDataCart.value?.data?.items || [];
+    } else {
+      // console.error("Không có dữ liệu giỏ hàng từ API");
+    }
+  } else {
+    dataCart.value = null;
+    cart.value = [];
+  }
+}
+const toggleCart = () => {
+  showCart.value = !showCart.value;
+  showDrawer.value = false;
+  loadCart();
+}
 </script>
 
 <template>
@@ -52,7 +79,21 @@ const toggleMenu = () => {
           <div @click="toggleMenu" v-if="!showDrawer && !showCart" class="lg:hidden w-6 h-6 mr-[5.5px]">
             <MenuMobile />
           </div>
-          
+          <div class="w-[125px] h-10 gap-2">
+            <NuxtLink to="/">
+              <NuxtImg src="/img/logo.png" alt="logo" class="w-full h-full object-cover" />
+            </NuxtLink>
+          </div>
+          <div class="block lg:hidden">
+            <div v-if="!showDrawer && !showCart" class="w-6 h-6 relative flex ml-6 cursor-pointer" @click="toggleCart()">
+              <Cart />
+              <ClientOnly>
+                <div v-if ="showCartCount">
+
+                </div>
+              </ClientOnly>
+            </div>
+          </div>
         </div>
       </div>
     </div>
