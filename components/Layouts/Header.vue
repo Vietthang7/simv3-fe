@@ -37,6 +37,7 @@ const toggleMenu = () => {
   showDrawer.value = !showDrawer.value;
   showCart.value = false;
 }
+
 // Lấy dữ liệu giỏ hàng
 const dataCart = ref(null);
 const cart = ref([]);
@@ -88,8 +89,9 @@ const toggleCart = () => {
             <div v-if="!showDrawer && !showCart" class="w-6 h-6 relative flex ml-6 cursor-pointer" @click="toggleCart()">
               <Cart />
               <ClientOnly>
-                <div v-if ="showCartCount">
-
+                <div v-if ="showCartCount"
+                class="w-4 h-4 bg-primary flex items-center rounded-full text-[10px] absolute lg:-top-1.5 lg-right-1.5 top-1.5 left-[14px]">
+                  {{ }}
                 </div>
               </ClientOnly>
             </div>
