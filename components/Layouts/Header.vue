@@ -16,9 +16,9 @@ const callApiSearch = async () => {
   // Gọi API để lấy dữ liệu
   if (resultSearch.value.length === 0) {
     const { data: resData } = await restAPI.stores.getSearch();
-    resultSearch.value = resData.data;
+    resultSearch.value = resData.value.data || [];
   }
-}
+};
 // Hàm xử lí tìm kiếm
 const handleSearch = () => {
   const searchQueryTrimmed = searchQuery.value.trim().toLowerCase();
@@ -90,13 +90,15 @@ const categoriesMap = rawCategories.reduce((acc, item) => {
 }, {});
 
 // Gắn danh muc con vào danh mục cha
-Object.keys(categoriesMap).forEach((category) => {
+Object.values(categoriesMap).forEach((category) => {
   if (
     !isObjectNullOrEmpty(category.parent_id) &&
-    categoriesMap[category.parent_id]) {
+    categoriesMap[category.parent_id]
+  ) {
     categoriesMap[category.parent_id].options.push(category);
   }
 });
+
 // Lọc danh mục cấp 1
 let visibleCategories = Object.values(categoriesMap).filter(
   (category) =>
@@ -125,7 +127,7 @@ const onCloseSearch = () => {
 watch(
   () => showBaseSearch.value,
   (newValue) => {
-    if (newValue) {
+    if (newValue === false) {
       searchQuery.value = null;
       searchResults.value = [];
     }
@@ -163,7 +165,7 @@ validateRoutePath();
 
 
 // Quản lí giỏ hàng
-import { useCartStore } from "~/stores/cart.js";
+import { useCartStore } from "@/stores/cart";
 const cartStore = useCartStore();
 const cartItemsCount = computed(() => cartStore.cartQuantity);
 
@@ -217,7 +219,7 @@ const updateCart = async (item) => {
     const { data: resUpdate } = await restAPI.stores.updateCustomer(cart_id, {
       body: { items }
     });
-    if (resUpdate.value?.error) {
+    if (resUpdate.value?.error === false) {
       updatePiniaCartQuantity();
       loadCart();
       loading.value = false;
@@ -315,13 +317,13 @@ const updateQuantityWithDelay = async (item, value) => {
 // Theo dõi Số lượng Giỏ hàng
 watch(
   () => cartItemsCount.value,
-    (newValue,oldValue) => {
-      if (newValue !== oldValue && newValue > 0) {
-        window.scrollBy(0, -1);
-        showCart.value = true;
-        loadCart();
-      }
+  (newValue, oldValue) => {
+    if (newValue !== oldValue && newValue > 0) {
+      window.scrollBy(0, -1);
+      showCart.value = true;
+      loadCart();
     }
+  }
 );
 // Hàm điều khiển UI
 const toggleMenu = () => {
@@ -356,7 +358,7 @@ const isExpanded = ref(Array(visibleCategories.length).fill(false)); // Lưu tr�
 // Ví dụ: Nếu visibleCategories.length = 3, thì isExpanded.value = [false, false, false].
 
 const isChildExpanded = ref(
-    visibleCategories.map((category) => category.options.map(() => false)) // Lưu trạng thái mở rộng của các danh mục cấp 2 trong từng danh mục cấp 1.
+  visibleCategories.map((category) => category.options.map(() => false)) // Lưu trạng thái mở rộng của các danh mục cấp 2 trong từng danh mục cấp 1.
 );
 // Hàm Mở/Rút gọn Menu
 const toggleCollapse = (index) => {
@@ -378,16 +380,16 @@ const toggleChildCollapse = (index) => {
 };
 //Menu tĩnh
 const menuItems = ref([
-  {name: "Tin tức", slug: "tin-tuc"},
+  { name: "Tin tức", slug: "tin-tuc" },
 ]);
 
 // Định dạng giá
 const formatPrice = (price) => {
-  return price ? new Intl.NumberFormat("vi-VN").format(price) +"đ" : "";
+  return price ? new Intl.NumberFormat("vi-VN").format(price) + "đ" : "";
 }
 
 //Đóng menu mobile khi route thay đổi.
-watch(route , () => {
+watch(route, () => {
   showDrawer.value = false;
 })
 

@@ -23,4 +23,11 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "pinia-plugin-persistedstate/nuxt",
   ],
+  runtimeConfig: {
+    public: {
+      baseUrl: "",
+      domainUrl: "https://sim.wifi247.vn",
+      ga: process.env.NUXT_PUBLIC_GA || "G-3TM6KKY84Y",
+    },
+  },
 })
