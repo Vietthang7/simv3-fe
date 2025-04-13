@@ -13,3 +13,9 @@
   padding-left: 1rem; 
   padding-right: 1rem;
 }
+.text-secondary {
+  color: #4e4e4e;
+}
+.text-primary {
+  color: #39b54a;
+}
