@@ -543,8 +543,34 @@ function handleClick(menuSlug, optionSlug, childSlug) {
         </div>
       </div>
     </div>
-    <Drawer>
-      
+    <Drawer v-model:show="showDrawer" placement="left" :classList="'w-75% px-18px'">
+      <div class="px-4 mb-[350px]">
+        <div class="w-full flex items-center py-2 mb-2 mt-2">
+          <input type="text" placeholder="Tìm kiếm sản phẩm"
+            class="py-[18px] pl-4 pr-1 w-full h-[36px] text-secondary text-base border border-[#39b54a] focus:outline-none rounded-xl"
+            v-model="searchQuery" @input="onInputMb" />
+          <button aria-label="search"
+            class="min-w-[36px] min-h-[36px] ml-2 right-0 bg-primary rounded-full flex items-center justify-center"
+            @click="resultSearch">
+            <Search />
+          </button>
+        </div>
+        <div v-if="searchResults?.length > 0" ref="searchResultsContainer"
+          class="bg-white absolute z-[200] md:w-[90%] sm:w-[85%] w-[82%] rounded-2xl p-[15px] space-y-2 text-secondary border border-gray-200">
+          <div class="space-y-2">
+            <div v-for="(result, index) in searchResults" :key="index" class="cursor-pointer">
+              <div @click="navigateTo(`/search/${result?.slug}`)" class="">
+                {{ result.name }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <NuxtLink to="/" class="text-secondary mr-2">
+          <span :class="{ 'text-primary': route.path === '/' }" class="">Trang chủ</span>
+        </NuxtLink>
+        
+
+      </div>
     </Drawer>
   </div>
 </template>
