@@ -436,7 +436,7 @@ function handleClick(menuSlug, optionSlug, childSlug) {
               <Cart />
               <ClientOnly>
                 <div v-if="showCartCount"
-                  class="w-4 h-4 bg-primary flex items-center rounded-full text-[10px] absolute lg:-top-1.5 lg-right-1.5 top-1.5 left-[14px]">
+                  class="w-4 h-4 bg-primary flex items-center justify-center text-white rounded-full text-[10px] absolute lg:-top-1.5 lg:-right-1.5 top-1.5 left-[14px]">
                   {{ cartItemsCount }}
                 </div>
               </ClientOnly>
@@ -459,15 +459,110 @@ function handleClick(menuSlug, optionSlug, childSlug) {
                   Trang chủ
                 </span>
               </NuxtLink>
-              <div v-for="(menuItem, index) in visibleCategories">
-
+              <div v-for="(menuItem, index) in visibleCategories" :key="index" class="relative group flex items-center">
+                <div class="xl:mx-2 lg:mx-2">
+                  <NuxtLink :to="`/${menuItem.slug}`" class="relative block">
+                    <div class="flex items-center justify-center text-sm hover:text-[#39B54A]">
+                      <div :class="{
+                        'text-primary': route.path === `/${menuItem.slug}`,
+                      }" class="text-secondary">
+                        {{ menuItem.name }}
+                      </div>
+                      <div v-if="menuItem?.options && menuItem?.options?.length > 0" class="">
+                        <DropDownMenu />
+                      </div>
+                    </div>
+                    <div class="absolute top-full left-0 right-0 bg-transparent h-12">
+                    </div>
+                  </NuxtLink>
+                </div>
+                <div v-if="menuItem?.options" class="hidden group-hover:block absolute top-16 z-20 bg-white rounded-xl"
+                  id="dropdownMenu">
+                  <div class="" v-for="option in menuItem.options" :key="option">
+                    <div
+                      class="w-full dropdown p-1 text-base text-secondary whitespace-nowrap flex items-center justify-between">
+                      <div class="flex items-center justify-between cursor-pointer hover:bg-[#DBEFDE] rounded-xl"
+                        @click="navigateTo(`/${menuItem.slug}/${option.slug}`)">
+                        <div class="text-secondary p-2 pr-8 w-full hover:text-[#39B54A]">
+                          {{ option.name }}
+                        </div>
+                        <div class="hover:bg-[#DBEFDE]" v-if="option?.options && option?.options?.length > 0">
+                          <DropRightMenu />
+                        </div>
+                      </div>
+                      <div class="hidden 2xl:block">
+                        <div v-if="option?.options" class="dropdown-content top-0 left-full ml-[1px] rounded-xl"
+                          id="dropdownMenuChild">
+                          <div class="p-1 w-full" v-for="child in option?.options" :key="child">
+                            <div @click="
+                              navigateTo(
+                                `/${menuItem?.slug}/${option?.slug}/${child?.slug}`
+                              )
+                              "
+                              class="p-2 text-base text-secondary hover:bg-[#DBEFDE] hover:text-[#39B54A] whitespace-nowrap rounded-xl pr-8 cursor-pointer">
+                              {{ child.name }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+            <div v-for="(item, index) in menuItems" :key="index" class="flex items-center justify-center">
+              <div @click="navigateTo(`/${item.slug}`)" class="mx-2 text-secondary hover:text-[#39B54A] cursor-pointer"
+                :class="{
+                  'text-primary': routeSlug === `${item.slug}`,
+                }">
+                {{ item.name }}
+              </div>
+            </div>
+            <div class="mx-2 text-secondary hover:text-[#39B54A] cursor-pointer">
+              <a href="https://wifi247.vn" class="" target="_blank">
+                Dịch vụ khác</a>
+            </div>
 
+            <div class="flex">
+              <div class="flex">
+                <div @click="toggleSearch" class="">
+                  <SearchHeader class="cursor-pointer mb-1 ml-5" />
+                </div>
+                <div class="w-6 h-6 relative flex ml-6 cursor-pointer" @click="toggleCart">
+                  <Cart />
+                  <ClientOnly fallback-tag="span" fallback="">
+                    <div v-if="showCartCount"
+                      class="w-4 h-4 bg-primary flex items-center justify-center text-white rounded-full text-[10px] absolute lg:-top-1.5 lg:-right-1.5 top-1.5 left-[14px]">
+                      {{ cartItemsCount }}
+                    </div>
+                  </ClientOnly>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
+    <Drawer>
+      
+    </Drawer>
   </div>
 </template>
+<style>
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 20;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+</style>
