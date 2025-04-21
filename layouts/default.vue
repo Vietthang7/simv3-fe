@@ -54,26 +54,23 @@
       </div>
     </div>
     <div v-if="showModalTel" @click.self="handleModalTel"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70] transition-opacity duration-500 opacity-0"
-      :class="{ 'opacity-100': showModalTel }">
-      <div class="bg-white rounded-lg p-6 w-96 transform transition-all duration-300 ease-out"
-        :class="{ 'translate-y-4 opacity-0': showModalTel, 'translate-y-0 opacity-100': !showModalTel }">
-        >
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70]">
+      <div class="bg-white rounded-lg p-6 w-96">
         <div class="w-full flex justify-end">
           <CloseBlack @click="handleModalTel" class="cursor-pointer" />
         </div>
         <h3 class="text-lg font-semibold text-title text-center mb-4">
-          Kết nối với chúng tôi qua điện thoại
+          Liên hệ với chúng tôi qua phone
         </h3>
         <div class="flex flex-col space-y-4">
-          <a href="tel:0394143687">
+          <a href="tel:+84987654321" class="w-full">
             <button class="bg-primary text-white py-2 px-4 rounded w-full">
               <div class="flex flex-col items-center align-center min-w-[60px]">
                 Hà Nội
               </div>
             </button>
           </a>
-          <a href="tel:0394143687">
+          <a href="tel:+84912345678" class="w-full">
             <button class="bg-primary text-white py-2 px-4 rounded w-full">
               <div class="flex flex-col items-center align-center min-w-[60px]">
                 Hồ Chí Minh
@@ -167,12 +164,15 @@ const zaloVrClass = computed(() => {
 .fixed-header {
   @apply fixed top-0 left-0 right-0 z-50 bg-white shadow-lg transition-all duration-300 ease-in-out;
 }
+
 .hidden-header {
   transform: translateY(-100%);
 }
+
 .content {
   margin-top: 130px;
 }
+
 .play {
   -webkit-animation: zoom 1.4s infinite;
   animation: zoom 1.4s infinite;
@@ -183,48 +183,60 @@ const zaloVrClass = computed(() => {
   transition: all 0.5s;
   transform-origin: 50% 50%;
 }
+
 .play_child {
   animation: phone-vr-circle-fill 1.4s infinite ease-in-out;
   border-radius: 50%;
   display: flex;
   background-color: rgba(57, 181, 74, 0.6);
 }
+
 #zalo-vr .phone-vr-circle-fill {
   box-shadow: 0 0 0 0 rgba(57, 181, 74, 0.6);
   background-color: rgba(57, 181, 74, 0.5);
 }
+
 @keyframes zoom {
   0% {
     transform: scale(0.9);
   }
+
   70% {
     transform: scale(1);
     box-shadow: 0 0 0 15px transparent;
   }
+
   100% {
     transform: scale(0.9);
     box-shadow: 0 0 0 0 transparent;
   }
 }
+
 @keyframes phone-vr-circle-fill {
   0% {
     -webkit-transform: rotate(0) scale(1) skew(1deg);
   }
+
   10% {
     -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
   }
+
   20% {
     -webkit-transform: rotate(25deg) scale(1) skew(1deg);
   }
+
   30% {
     -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
   }
+
   40% {
     -webkit-transform: rotate(25deg) scale(1) skew(1deg);
   }
+
   50% {
     -webkit-transform: rotate(0) scale(1) skew(1deg);
   }
+
   100% {
     -webkit-transform: rotate(0) scale(1) skew(1deg);
   }

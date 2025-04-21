@@ -14,7 +14,6 @@ class Request {
   constructor() {
     this.baseURL = useRuntimeConfig().public.baseUrl;
     this.headers = {};
-    console.log("baseURL", this.baseURL);
   }
 
   fetch(url, method, options) {
