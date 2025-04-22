@@ -44,7 +44,102 @@
             class="cursor-pointer">
             {{ link.name }}
           </span>
+        </div>
+      </div>
+      <div v-if="PC" class="flex-col w-[180px]">
+        <div class="text-lg text-title py-1.5 font-medium">
+          Về chúng tôi
+        </div>
+        <div class="py-1.5" v-for="link in aboutUs" :key="link.id">
+          <span @click="navigateTo(`/${link.slug}`)" class="cursor-pointer">
+            {{ link.text }}
+          </span>
+        </div>
+      </div>
 
+      <div v-else class="flex my-10">
+        <div class="w-[50%]">
+          <div class="text-lg text-title py-1.5 font-medium">
+            Sản phẩm
+          </div>
+          <div class="py-1.5" v-for="link in filteredProducts" :key="link.id">
+            <span v-if="link?.visible_footer === 1"
+            @click="navigateTo(constructCategoryPath(link))"
+              class="cursor-pointer">
+            >
+              {{ link.name }}
+            </span>
+          </div>
+        </div>
+
+        <div class="w-[50%]">
+          <div class="text-lg text-title py-1.5 font-medium">
+            Về chúng tôi
+          </div>
+          <div class="py-1.5" v-for="link in aboutUs" :key="link.id">
+            <span @click="navigateTo(`/${link.slug}`)" class="cursor-pointer">
+                     {{  link.text }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="w-[286px]">
+        <div class="text-lg text-title py-2 font-medium">
+          Kết nối với Sim247
+        </div>
+        <div class="py-1 flex">
+          <!-- <div
+            class="mr-1.5 w-10 h-10 flex items-center justify-center rounded-xl bg-white"
+          >
+            <a href="" class=""> <Twitter /></a>
+          </div> -->
+          <div
+              class="mx-1.5 w-10 h-10 flex items-center justify-center rounded-xl bg-white"
+          >
+            <a
+                href="https://www.tiktok.com/@wifi24_7?is_from_webapp=1&sender_device=pc"
+                class=""
+                target="_blank"
+            >
+              <Tiktok
+              /></a>
+          </div>
+          <!-- <div
+            class="mx-1.5 w-10 h-10 flex items-center justify-center rounded-xl bg-white"
+          >
+            <CallPhone />
+          </div> -->
+          <div
+              class="mx-1.5 w-10 h-10 flex items-center justify-center rounded-xl bg-white"
+          >
+            <a
+                href="https://www.instagram.com/wifi247_wifidulich_wifiquocte/"
+                class=""
+                target="_blank"
+            >
+              <Instagram
+              /></a>
+          </div>
+          <div
+              class="ml-1.5 w-10 h-10 flex items-center justify-center rounded-xl bg-white"
+          >
+            <a
+                href="https://www.facebook.com/wifiquocte247"
+                target="_blank"
+                class=""
+            >
+              <Facebook
+              /></a>
+          </div>
+        </div>
+        <div class="pt-6">
+          <div class="w-[179px] h-[66px]">
+            <NuxtImg
+                src="/img/obito.jpg"
+                alt="bct"
+                class="w-full h-full object-cover"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -55,7 +150,10 @@
 </template>
 
 <script setup>
+import Tiktok from "~/components/icon/Tiktok.vue";
+import Instagram from "~/components/icon/Instagram.vue";
 
+const route = useRoute();
 const width = ref(0);
 const updateWidth = () => {
   if (process.client) {
@@ -111,7 +209,7 @@ Object.values(categoriesMap).forEach((category) => {
 });
 
 let visibleCategories = Object.values(categoriesMap).filter(
-  (category) => isObjectNullOrEmpty(category.parent_id) && category.visible_footer === 1
+  (category) => isObjectNullOrEmpty(category.parent_id) && category.visible_nav === 1
 );
 
 visibleCategories.forEach((category) => {
@@ -126,6 +224,7 @@ visibleCategories.forEach((category) => {
 });
 visibleCategories.sort((c1, c2) => c1.position - c2.position);
 
+
 // Kiểm tra tính hợp lệ của đường dẫn
 const validateRoutePath = () => {
   const categoryPathArr = route.path.split("/").filter(Boolean);
@@ -134,22 +233,55 @@ const validateRoutePath = () => {
     "search",
     "sanpham",
     "dat-hang",
-    
-  ]
-}
+    "chinh-sach-thanh-toan",
+    "chinh-sach-doi-tra",
+    "huong-dan-mua-hang",
+    "kiem-tra-thiet-bi",
+  ];
+  if (allowedPaths.includes(categoryPathArr[0])) {
+    return;
+  }
 
 
+  let currentCategories = visibleCategories;
+  for (let i = 0; i < categoryPathArr.length; i++) {
+    const category = currentCategories.find(
+      (cat) => cat.slug === categoryPathArr[i]
+    );
+    if (!category) {
+      navigateTo("/");
+      return;
+    }
+    currentCategories = category.options;
+  }
+};
+validateRoutePath();
 
 
-
-
-
+// Xây dựng đường dẫn danh mục đầy đủ
 const constructCategoryPath = (category) => {
   let path = `/${category.slug}`;
+
   const findParent = (categoryId, categories) => {
     for (const cat of categories) {
-      if (cat.options?.some((option) => option.id === c))
+      if (cat.options?.some((option) => option.id === categoryId)) {
+        return cat;
+      }
+      if (cat.options) {
+        const nestedParent = findParent(categoryId, cat.options);
+        if (nestedParent) return nestedParent;
+      }
     }
+    return null;
+  };
+
+  let parent = findParent(category.id, visibleCategories);
+
+  while (parent) {
+    path = `/${parent.slug}${path}`;
+    parent = findParent(parent.id, visibleCategories);
   }
-}
+
+  return path;
+};
 </script>
