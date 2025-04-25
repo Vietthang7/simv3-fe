@@ -34,17 +34,26 @@ const callApiSearch = async () => {
   // Gọi API để lấy dữ liệu
   if (resultSearch.value.length === 0) {
     const { data: resData } = await restAPI.stores.getSearch();
-    resultSearch.value  = resData.value.data || [];
+    resultSearch.value = resData.value.data || [];
   }
 };
 await callApiSearch();
 //Lọc kết quả
 const handleSearch = () => {
   const searchQueryTrimmed = searchQuery.value.trim().toLowerCase();
-  if(searchQueryTrimmed === "") {
+  if (searchQueryTrimmed === "") {
     return [];
   };
-  const 
+  const filteredResults = resultSearch.value.filter((item) => {
+    const scopeNormalized = item.scope
+      .toLowerCase()
+      .replace(/\s+/g, "") // Loại bỏ khoảng trắng
+      .split(",")
+      .join(""); // Nối lại thành một chuỗi liên tục
+    return (
+      item.name.toLowerCase().includes(searchQueryTrimmed)
+    )
+  })
 }
 
 </script>
