@@ -17,7 +17,7 @@ const props = defineProps({
   }
 });
 const slug = route.path.split("/").pop();
-const categoyName = computed(() => {
+const categoryName = computed(() => {
   const categories = Array.isArray(props.categories) ? props.categories : [];
   const categoriesDetail = Array.isArray(props.categoriesDetail) ? props.categoriesDetail : [];
   const category = categories.find((cat) => cat.slug === slug) || null;
@@ -108,7 +108,7 @@ nextTick: Là một API trong Vue 3, đảm bảo mọi thay đổi trong DOM (l
 <template>
   <div class="mx-4">
     <div v-if="['/'].includes(route.path)" :style="backgroundStyles"
-      class="w-full bg-cover bg-center rounded-3xl md:flex pt-[60px] pb-[140px] md:pt-0 md:pb-0 items-center justify-center">
+      class="banner w-full bg-cover bg-center rounded-3xl md:flex pt-[60px] pb-[140px] md:pt-0 md:pb-0 items-center justify-center">
       <div class="w-full relative text-white text-base mb-8">
         <div class="text-center">
           <p>Sim247 - Sim du lịch quốc tế</p>
@@ -170,11 +170,71 @@ nextTick: Là một API trong Vue 3, đảm bảo mọi thay đổi trong DOM (l
           Không tìm thấy kết quả nào
         </div>
 
-      </div>
+        <BaseSearchMobile v-model:show ="showBaseSearch">
+          <div class="bg-white w-full rounded-3xl absolute items-center justify-center p-[15px]">
+            <div class="w-full mr-4 mb-3 md:mb-0">
+              <span class="text-title ml-2">
+                Địa điểm
+              </span>
+              <input type="text" ref="searchInput"
+              class="rounded-md text-sm w-full px-2 py-2 text-secondary focus:outline-none font-light"
+              placeholder="Nhập quốc gia du lịch..." v-model="searchQuery" @input="onInput"/>
+            </div>
+            <ButtonBase class="w-full min-h-14 rounded-xl flex justify-center items-center">
+              <Search />
+              <span class="ml-1 font-light text-sm">Tìm kiếm</span>
+            </ButtonBase>
+          </div>
 
+          <div v-if="searchQuery" class="bg-white w-full items-center justify-between p-[15px]">
+            <div v-if="searchQuery && searchResults.length > 0">
+              <div class="bg-white absolute z-[200] w-[90%] rounded-xl p-[15px] space-y-2 text-secondary border border-gray-200">
+                  <div class="space-y-2">
+                    <div class="space-y-2">
+                      <div v-for="(result, index) in searchResults" :key="index" class="cursor-pointer">
+                          <div @click="navigateTo(`/search/${result?.slug}`)" class="">
+                            {{ result.name }}
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div v-else-if="searchQuery && searchResults.length === 0"
+                 class="bg-white absolute z-[200] rounded-xl p-[15px] w-[90%] space-y-2 text-secondary border border-gray-200">
+              Không tìm thấy kết quả nào
+            </div>
+          </div>
+        </BaseSearchMobile>
+      </div>
+    </div>
+
+    <div v-else :style="backgroundStyles"
+         class="lg:min-h-[500px] min-h-[360px] w-full bg-cover bg-center rounded-3xl flex items-center justify-center">
+      <div class="w-full text-white text-base">
+        <div class="text-center">
+          <p>Sim247 - Sim du lịch quốc tế</p>
+          <div class="mb-4 mt-2">
+            <h1 class="lg:text-5xl md:text-4xl text-[28px] font-semibold">
+              {{ categoryName }}
+            </h1>
+          </div>
+          <NuxtLink to="/kiem-tra-thiet-bi" class="underline">Kiểm tra thiết bị có hỗ trợ<br class="block sm:hidden" />
+            eSIM không tại đây.
+          </NuxtLink>
+        </div>
+      </div>
     </div>
 
   </div>
 </template>
+
+<style>
+.banner {
+  min-height: 600px;
+  background-repeat: no-repeat;
+}
+</style>
+
 <!--Theo cấu hình mặc định của Tailwind CSS, text-5xl = 3rem = 48px.-->
 <!--Theo cấu hình mặc định của Tailwind CSS, text-4xl = 2.25rem = 36px-->

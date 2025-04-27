@@ -26,5 +26,9 @@ useSeoMeta({
 <template>
   <div>
     <Banner />
+    <CategoriesIndex
+        :productCategoryList="productCategoryList"
+        class="width-base"
+    />
   </div>
 </template>
