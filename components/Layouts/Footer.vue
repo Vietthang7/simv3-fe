@@ -135,7 +135,7 @@
         <div class="pt-6">
           <div class="w-[179px] h-[66px]">
             <NuxtImg
-                src="/img/obito.jpg"
+                src="/img/BCT.png"
                 alt="bct"
                 class="w-full h-full object-cover"
             />

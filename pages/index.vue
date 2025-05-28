@@ -1,7 +1,7 @@
 <script setup>
 const { restAPI } = useApi();
 const config = useRuntimeConfig();
-const {data : resData} = await restAPI.stores.getListProductCategory({
+const { data: resData } = await restAPI.stores.getListProductCategory({
   params: {
     current: 1,
     pageSize: 9999,
@@ -17,7 +17,7 @@ useHead({
 useSeoMeta({
   title: "Sim247 - Sim du lịch quốc tế",
   description:
-      "Sim247 - Sim du lịch quốc tế, Chuyên sim du lịch giá rẻ giá ngon đảm bảo chất lượng",
+    "Sim247 - Sim du lịch quốc tế, Chuyên sim du lịch giá rẻ giá ngon đảm bảo chất lượng",
   keywords: "sim du lịch, sim du lịch giá rẻ, sim du lịch chất lượng",
 });
 </script>
@@ -26,9 +26,10 @@ useSeoMeta({
 <template>
   <div>
     <Banner />
-    <CategoriesIndex
-        :productCategoryList="productCategoryList"
-        class="width-base"
-    />
+    <CategoriesIndex :productCategoryList="productCategoryList" class="width-base" />
+    <Advantage class="width-base" />
+    <FAQ />
+    <Partner class="width-base" />
+    <News class="width-base mt-[100px]" />
   </div>
 </template>
